@@ -20,117 +20,46 @@ Understanding this lifecycle helps you know **where to place authentication, val
                     Incoming HTTP Request
                              │
                              ▼
-                    Global Middleware
+                      Global Middleware
                              │
                              ▼
-                    Route Middleware
+                      Route Middleware
                              │
                              ▼
-                         Guards
-                  (Authentication /
-                   Authorization)
+                          Guards
+            (Authentication / Authorization)
                              │
                              ▼
-                 Interceptors (Before)
+                    Interceptors (Before)
                              │
                              ▼
                           Pipes
-            (Validation & Transformation)
+                (Validation & Transformation)
                              │
                              ▼
-                       Controller
+                         Controller
                              │
                              ▼
-                         Service
+                          Service
                              │
                              ▼
-                  Repository / Database
+                   Repository / Database
                              │
                              ▼
-                         Service
+                          Service
                              │
                              ▼
-                       Controller
+                         Controller
                              │
                              ▼
-                 Interceptors (After)
+                    Interceptors (After)
                              │
                              ▼
-                 Exception Filters
-                     (Only on Error)
+             Exception Filters (Only on Error)
                              │
                              ▼
-                      HTTP Response
+                       HTTP Response
 ```
-
----
-
-# Easy Flow Diagram
-
-```text
-┌──────────┐
-│  Client  │
-└────┬─────┘
-     │
-     ▼
-┌──────────────┐
-│ Middleware   │
-└────┬─────────┘
-     │
-     ▼
-┌──────────────┐
-│ Guards       │
-└────┬─────────┘
-     │
-     ▼
-┌──────────────┐
-│ Interceptor  │
-│   (Before)   │
-└────┬─────────┘
-     │
-     ▼
-┌──────────────┐
-│ Pipes        │
-└────┬─────────┘
-     │
-     ▼
-┌──────────────┐
-│ Controller   │
-└────┬─────────┘
-     │
-     ▼
-┌──────────────┐
-│ Service      │
-└────┬─────────┘
-     │
-     ▼
-┌──────────────┐
-│ Repository   │
-│ Database     │
-└────┬─────────┘
-     │
-     ▼
- Service
-     │
-     ▼
-Controller
-     │
-     ▼
-┌──────────────┐
-│ Interceptor  │
-│   (After)    │
-└────┬─────────┘
-     │
-     ▼
-┌──────────────┐
-│ Exception    │
-│ Filters      │
-└────┬─────────┘
-     │
-     ▼
- HTTP Response
-```
-
 ---
 
 # Step 1 — Client
@@ -198,21 +127,14 @@ otherwise request stops.
 ### Real Example
 
 ```text
-Incoming Request
-
-↓
-
-Logger Middleware
-
-↓
-
-Print
-
-POST /users
-
-↓
-
-Next()
+                    Incoming Request
+                           ↓
+                    Logger Middleware
+                           ↓
+                         Print
+                      POST /users
+                           ↓
+                         Next()
 ```
 
 ---
@@ -413,15 +335,11 @@ Only Database Operations.
 After database returns data
 
 ```text
-Repository
-
-↓
-
-Service
-
-↓
-
-Controller
+            Repository
+                ↓
+             Service
+                ↓
+            Controller
 ```
 
 The controller sends the response back.
@@ -516,43 +434,43 @@ Example
 # Complete Lifecycle (One-Line Flow)
 
 ```text
-Client
-   │
-   ▼
-Middleware
-   │
-   ▼
-Guards
-   │
-   ▼
-Interceptors (Before)
-   │
-   ▼
-Pipes
-   │
-   ▼
-Controller
-   │
-   ▼
-Service
-   │
-   ▼
-Repository / Database
-   │
-   ▼
-Service
-   │
-   ▼
-Controller
-   │
-   ▼
-Interceptors (After)
-   │
-   ▼
-Exception Filters
-   │
-   ▼
-Response
+                 Client
+                    │
+                    ▼
+               Middleware
+                    │
+                    ▼
+                 Guards
+                    │
+                    ▼
+          Interceptors (Before)
+                    │
+                    ▼
+                  Pipes
+                    │
+                    ▼
+                Controller
+                    │
+                    ▼
+                 Service
+                    │
+                    ▼
+           Repository / Database
+                    │
+                    ▼
+                 Service
+                    │
+                    ▼
+                Controller
+                    │
+                    ▼
+           Interceptors (After)
+                    │
+                    ▼
+            Exception Filters
+                    │
+                    ▼
+                 Response
 ```
 
 ---
@@ -560,71 +478,43 @@ Response
 # Real Example (User Registration API)
 
 ```text
-Client
+                 Client
+                    ↓
+               POST /users
+                    ↓
+             Logger Middleware
+                    ↓
+                JWT Guard
+                    ↓
+            Logging Interceptor
+                    ↓
+              Validation Pipe
+                    ↓
+              User Controller
+                    ↓
+               User Service
+                    ↓
+              User Repository
+                    ↓
+               PostgreSQL
+                    ↓
+              User Repository
+                    ↓
+               User Service
+                    ↓
+             User Controller
+                    ↓
+            Response Interceptor
+                    ↓
+                Response
 
-↓
-
-POST /users
-
-↓
-
-Logger Middleware
-
-↓
-
-JWT Guard
-
-↓
-
-Logging Interceptor
-
-↓
-
-Validation Pipe
-
-↓
-
-User Controller
-
-↓
-
-User Service
-
-↓
-
-User Repository
-
-↓
-
-PostgreSQL
-
-↓
-
-User Repository
-
-↓
-
-User Service
-
-↓
-
-User Controller
-
-↓
-
-Response Interceptor
-
-↓
-
-Response
-
-{
-    "success": true,
-    "data": {
-        "id": 1,
-        "name": "John"
-    }
-}
+            {
+                "success": true,
+                "data": {
+                    "id": 1,
+                    "name": "John"
+                }
+            }
 ```
 
 ---
@@ -652,55 +542,31 @@ Response
 **Answer**
 
 ```
-Client
-
-↓
-
-Middleware
-
-↓
-
-Guards
-
-↓
-
-Interceptors (Before)
-
-↓
-
-Pipes
-
-↓
-
-Controller
-
-↓
-
-Service
-
-↓
-
-Repository / Database
-
-↓
-
-Service
-
-↓
-
-Controller
-
-↓
-
-Interceptors (After)
-
-↓
-
-Exception Filters
-
-↓
-
-Response
+                       Client
+                          ↓
+                     Middleware
+                          ↓
+                        Guards
+                          ↓
+                Interceptors (Before)
+                          ↓
+                        Pipes
+                          ↓
+                     Controller
+                          ↓
+                       Service
+                          ↓
+                 Repository / Database
+                          ↓
+                       Service
+                          ↓
+                      Controller
+                          ↓
+                  Interceptors (After)
+                          ↓
+                    Exception Filters
+                          ↓
+                      Response
 ```
 
 ---
